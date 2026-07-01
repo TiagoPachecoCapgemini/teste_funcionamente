@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PvZ Minesweeper</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- MAIN MENU -->
+    <div id="main-menu" class="screen active">
+      <div class="menu-bg">
+        <div class="sun-decoration">☀️</div>
+        <div class="sun-decoration sun2">☀️</div>
+      </div>
+      <div class="menu-container">
+        <div class="title-area">
+          <div class="title-plants">🌻🌹🌵</div>
+          <h1 class="game-title">PvZ<br/><span>Minesweeper</span></h1>
+          <div class="title-zombies">🧟🧟🧟</div>
+        </div>
+        <div class="menu-card">
+          <h2 class="select-label">⚔️ Choose Your Battle ⚔️</h2>
+          <div class="difficulty-buttons">
+            <button class="diff-btn beginner" data-difficulty="beginner">
+              <span class="diff-icon">🌱</span>
+              <span class="diff-name">Seedling</span>
+              <span class="diff-info">9×9 • 10 Zombies</span>
+            </button>
+            <button class="diff-btn intermediate" data-difficulty="intermediate">
+              <span class="diff-icon">🌻</span>
+              <span class="diff-name">Sunflower</span>
+              <span class="diff-info">16×16 • 40 Zombies</span>
+            </button>
+            <button class="diff-btn expert" data-difficulty="expert">
+              <span class="diff-icon">🌵</span>
+              <span class="diff-name">Cactus</span>
+              <span class="diff-info">16×30 • 99 Zombies</span>
+            </button>
+          </div>
+          <button class="menu-btn instructions-btn" id="show-instructions">📖 How to Play</button>
+        </div>
+        <div class="grass-row">🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿</div>
+      </div>
+    </div>
+
+    <!-- INSTRUCTIONS MODAL -->
+    <div id="instructions-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>📖 How to Play</h2>
+        <div class="instructions-body">
+          <div class="inst-row"><span class="inst-icon">👆</span><span>Left-click a tile to reveal it</span></div>
+          <div class="inst-row"><span class="inst-icon">🚩</span><span>Right-click to place/remove a flag on a suspected zombie</span></div>
+          <div class="inst-row"><span class="inst-icon">🧟</span><span>Avoid the zombies hidden beneath the lawn!</span></div>
+          <div class="inst-row"><span class="inst-icon">🔢</span><span>Numbers show how many zombies are in adjacent tiles</span></div>
+          <div class="inst-row"><span class="inst-icon">🏆</span><span>Flag all zombies & reveal all safe tiles to win!</span></div>
+          <div class="inst-row"><span class="inst-icon">🛡️</span><span>Your first click is always safe!</span></div>
+        </div>
+        <button class="modal-close" id="close-instructions">🌻 Let's Go!</button>
+      </div>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="game-screen" class="screen">
+      <div class="game-header">
+        <div class="hud-left">
+          <button class="back-btn" id="back-to-menu">🏠</button>
+          <div class="diff-badge" id="diff-badge">🌱 Seedling</div>
+        </div>
+        <div class="hud-center">
+          <div class="hud-item" title="Zombies remaining">
+            <span class="hud-icon">🧟</span>
+            <span class="hud-value" id="zombie-count">10</span>
+          </div>
+          <button class="reset-btn" id="reset-btn" title="New Game">🌻</button>
+          <div class="hud-item" title="Time elapsed">
+            <span class="hud-icon">⏱️</span>
+            <span class="hud-value" id="timer">000</span>
+          </div>
+        </div>
+        <div class="hud-right">
+          <div class="flag-mode-toggle" id="flag-mode-area">
+            <span class="flag-label">Flag Mode</span>
+            <button class="flag-toggle" id="flag-toggle" title="Toggle flag mode (mobile)">🚩</button>
+          </div>
+        </div>
+      </div>
+      <div class="board-wrapper">
+        <div id="game-board" class="game-board"></div>
+      </div>
+      <div class="grass-footer">🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿</div>
+    </div>
+
+    <!-- WIN MODAL -->
+    <div id="win-modal" class="modal hidden">
+      <div class="modal-content win-modal">
+        <div class="modal-header win">🏆 VICTORY! 🏆</div>
+        <div class="win-plants">🌻🌹🌵🌻🌹🌵</div>
+        <p class="result-msg">You defended the garden!</p>
+        <p class="result-msg">All zombies have been flagged!</p>
+        <div class="result-stats">
+          <div class="stat-item"><span>⏱️ Time:</span><span id="win-time">--</span></div>
+          <div class="stat-item"><span>🏅 Difficulty:</span><span id="win-diff">--</span></div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn primary" id="win-new-game">🌱 Play Again</button>
+          <button class="modal-btn secondary" id="win-menu">🏠 Main Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOSE MODAL -->
+    <div id="lose-modal" class="modal hidden">
+      <div class="modal-content lose-modal">
+        <div class="modal-header lose">💀 BRAINS! 💀</div>
+        <div class="lose-zombies">🧟🧟🧟🧟🧟🧟</div>
+        <p class="result-msg">The zombies ate your brains!</p>
+        <p class="result-msg">Better luck next time...</p>
+        <div class="result-stats">
+          <div class="stat-item"><span>⏱️ Time survived:</span><span id="lose-time">--</span></div>
+          <div class="stat-item"><span>🏅 Difficulty:</span><span id="lose-diff">--</span></div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn primary" id="lose-new-game">🌱 Try Again</button>
+          <button class="modal-btn secondary" id="lose-menu">🏠 Main Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
